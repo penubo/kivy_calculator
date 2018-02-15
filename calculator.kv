@@ -1,0 +1,195 @@
+#:kivy 1.10.0
+
+<CustButton@Button>:
+	font_size: 20
+
+<BoxLayout>:
+	spacing:2
+
+<MainInterface>:
+	ScreenManager:
+		id: screenmng
+		CalculatorScreen:
+			name: 'calculator'
+			id: main
+			calculator: layout
+			CLayout:
+				id: layout
+				orientation: 'vertical'
+				height: 30
+				spacing: 10
+				padding: 10
+				display: entry
+
+				Label:
+					id: entry
+					text: self.text
+					text_size: self.size
+					color: 0, 0, 0, 1
+					pos: self.pos
+					size_hint: 1, None
+					height: 30
+					background_color: 1, 1, 1
+					valign: 'center'
+					halign: 'right'
+					padding_x: 10
+					canvas.before:
+						Color:
+							rgb: .8, .8, .8
+						Rectangle:
+							size: self.size
+							pos: self.pos
+
+				BoxLayout:
+					orientation: 'vertical'
+					BoxLayout:
+						CustButton:
+							text: '7'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '8'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '9'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '+'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '('
+							on_press: entry.text += self.text
+						CustButton:
+							text: ')'
+							on_press: entry.text += self.text
+						CustButton:
+							text: 'π'
+							on_press: entry.text += self.text
+
+					BoxLayout:
+						CustButton:
+							text: '4'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '5'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '6'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '-'
+							on_press: entry.text += self.text
+						CustButton:
+							text: 'sin'
+							on_press: entry.text += self.text + '('
+						CustButton:
+							text: 'cos'
+							on_press: entry.text += self.text + '('
+						CustButton:
+							text: 'tan'
+							on_press: entry.text += self.text + '('
+
+					BoxLayout:
+						CustButton:
+							text: '1'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '2'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '3'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '*'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '!'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '^'
+							on_press: entry.text += self.text
+						CustButton:
+							text: 'log'
+							on_press: entry.text += self.text + '('
+
+					BoxLayout:
+						CustButton:
+							text: 'AC'
+							on_press: entry.text = ''
+						CustButton:
+							text: '0'
+							on_press: entry.text += self.text
+						CustButton:
+							text: '='
+							on_press: layout.evaluate(entry.text)
+						CustButton:
+							text: '/'
+							on_press: entry.text += self.text
+						CustButton:
+							text: 'x'
+							on_press: entry.text += self.text
+						CustButton:
+							text: 'draw'
+							on_press:
+								root.ids['screenmng'].current = 'graph'
+								root.ids['canvas'].draw_it(entry.text)
+						CustButton:
+							text: '->'
+							on_press: layout.delete(entry.text)
+
+		GraphScreen:
+			name: 'graph'
+			BoxLayout:
+				orientation: 'vertical'
+
+				BoxLayout:
+					size_hint_y: None
+					height: 30
+					canvas:
+						Color:
+							rgb: 0.8, 0.8, 0.8
+						Rectangle:
+							size: self.size
+							pos: self.pos
+					Button:
+						size_hint_x: None
+						width: 60
+						text: 'Back'
+						on_press: root.ids['screenmng'].current = 'calculator'
+
+					Button:
+						size_hint_x: None
+						width: 100
+						text: 'center'
+						on_press: canvas.go_center()
+
+					Button:
+						size_hint_x: None
+						width: 100
+						text: 'clear'
+						on_press: canvas.canvas.before.clear()
+
+					Button:
+						size_hint_x: None
+						width: 40
+						text: '+'
+						on_press: canvas.zoom('in')
+
+					Button:
+						size_hint_x: None
+						width: 40
+						text: '-'
+						on_press: canvas.zoom('out')
+
+					Button:
+						size_hint_x: None
+						width: 40
+						text: 'o'
+						on_press: canvas.zoom('default')
+
+				GraphWidget:
+					id: canvas
+					canvas:
+						Line:
+							points: 0, self.center_y, self.width, self.center_y
+						Line:
+							points: self.center_x, 0, self.center_x, self.height
